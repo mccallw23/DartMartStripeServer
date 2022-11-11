@@ -16,7 +16,13 @@ app.use(cors({
 app.use("/webhook", bodyParser.raw({ type: "*/*" }));
 
 app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
-app.use(express.json())
+app.use((req, res, next) => {
+  if (req.originalUrl === "/webhook") {
+    next(); // Do nothing with the body because I need it in a raw state.
+  } else {
+    express.json()(req, res, next); // ONLY do express.json() if the received request is NOT a WebHook from Stripe.
+  }
+});
 app.use(express.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 app.use(bodyParser.raw({type: '*/*'}));
 const port = process.env.PORT || 3000;
