@@ -5,13 +5,15 @@ import Stripe from 'stripe';
 // import cors
 import cors from 'cors';
 import bodyParser from 'body-parser';
-
+import * as dotenv from "dotenv"; 
+dotenv.config();
 
 //import 'dotenv/config';
 const app = express();
 app.use(cors({
     origin: '*'
 }));
+
 app.use(bodyParser.json({limit: "50mb"}));
 app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 app.use(express.json())
@@ -23,7 +25,7 @@ const PUBLISHABLE_KEY_LIVE = process.env.PUBLISHABLE_KEY_LIVE;
 const SECRET_KEY_LIVE = process.env.SECRET_KEY_LIVE;
 //const SECRET_KEY = process.env.SECRET_KEY;
 const stripe = new Stripe(
-  "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",
+    SECRET_KEY_LIVE,
   { apiVersion: "2020-08-27" }
 );
 var success = false;
