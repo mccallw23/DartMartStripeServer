@@ -57,29 +57,33 @@ app.post('/webhook', express.raw({type: 'application/json'}), function(request, 
   console.log("secret key from the homies", endpointSecret);
      let event = request.body;
   try {
+    console.log("trying");
     event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
   } catch (err) {
     // invalid signature
+    console.log("catching");
     response.status(400).end();
     return;
   }
-
+  console.log("continuing");
   let intent = null;
   let success;
   switch (event['type']) {
     case 'payment_intent.succeeded':
+      console.log("payment intent succeeded");
       intent = event.data.object;
       console.log("Succeeded:", intent.id);
       success = true;
       break;
     case 'payment_intent.payment_failed':
+      console.log("payment intent failed");
       intent = event.data.object;
       const message = intent.last_payment_error && intent.last_payment_error.message;
       console.log('Failed:', intent.id, message);
       success = false;
       break;
   }
-
+  console.log("success:", success);
   response.json({success})
 
 
