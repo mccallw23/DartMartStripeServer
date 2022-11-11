@@ -74,16 +74,16 @@ app.post('/webhook', express.raw({type: 'application/json'}), function(request, 
   console.log("signature from the homies:", sig);
   console.log("secret key from the homies", endpointSecret);
      let event = request.body;
-  // try {
-  //   console.log("trying");
-  //   event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
-  // } catch (err) {
-  //   // invalid signature
-  //   console.log("catching");
-  //   console.log(err);
-  //   response.status(400).end();
-  //   return;
-  // }
+  try {
+    console.log("trying");
+    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+  } catch (err) {
+    // invalid signature
+    console.log("catching");
+    console.log(err);
+    response.status(400).end();
+    return;
+  }
    let intent = null;
    let success;
    switch (event["type"]) {
