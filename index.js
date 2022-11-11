@@ -43,7 +43,7 @@ httpServer.listen(port, "0.0.0.0", () => {
 );
 //payment route from stripe to get user id from stripe
 
-const endpointSecret = "whsec_VWuchwdrks3eOEFhiByGIDGPc3p6SaN7";
+const endpointSecret = "whsec_ozedlVnoImX7dEVZ51qX5yKa1Rt9XA0u";
 
 app.get('/test', (req, res) => {
     res.send('Hello World!');
