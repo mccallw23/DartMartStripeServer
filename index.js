@@ -41,7 +41,19 @@ const io = new Server(httpServer, {});
 
 io.on("connection", (socket) => {
   console.log("socket connected");
+  socket.on("join_p_room", (payload) => {
+    console.log("join_p_room", payload.paymentIntentId);
+    socket.join(payload.paymentIntentId);
+    console.log("joined p_room successfully");
+  });
 });
+
+io.on("join_p_room", (payload) => {
+  console.log("join_p_room", payload);
+  socket.join(payload["p_room"]);
+  console.log("joined p_room");
+});
+
 
 httpServer.listen(port, "0.0.0.0", () => {
     console.log(`Server is listening on port ${port}`);
@@ -62,34 +74,36 @@ app.post('/webhook', express.raw({type: 'application/json'}), function(request, 
   console.log("signature from the homies:", sig);
   console.log("secret key from the homies", endpointSecret);
      let event = request.body;
-  try {
-    console.log("trying");
-    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
-  } catch (err) {
-    // invalid signature
-    console.log("catching");
-    console.log(err);
-    response.status(400).end();
-    return;
-  }
-  console.log("continuing");
-  let intent = null;
-  let success;
-  switch (event['type']) {
-    case 'payment_intent.succeeded':
-      console.log("payment intent succeeded");
-      intent = event.data.object;
-      console.log("Succeeded:", intent.id);
-      success = true;
-      break;
-    case 'payment_intent.payment_failed':
-      console.log("payment intent failed");
-      intent = event.data.object;
-      const message = intent.last_payment_error && intent.last_payment_error.message;
-      console.log('Failed:', intent.id, message);
-      success = false;
-      break;
-  }
+  // try {
+  //   console.log("trying");
+  //   event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+  // } catch (err) {
+  //   // invalid signature
+  //   console.log("catching");
+  //   console.log(err);
+  //   response.status(400).end();
+  //   return;
+  // }
+   let intent = null;
+   let success;
+   switch (event["type"]) {
+     case "payment_intent.succeeded":
+       intent = event.data.object;
+       console.log("Succeeded:", intent.id);
+       success = true;
+       io.to(intent.id).emit("p_intent", { paymentSucceeded: success });
+       break;
+
+     case "payment_intent.payment_failed":
+       intent = event.data.object;
+       const message =
+         intent.last_payment_error && intent.last_payment_error.message;
+       console.log("Failed:", intent.id, message);
+       success = false;
+       io.to(intent.id).emit("p_intent", { paymentSucceeded: success });
+       break;
+   }
+
   console.log("success:", success);
   response.json({success})
 
