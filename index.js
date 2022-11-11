@@ -62,6 +62,7 @@ app.post('/webhook', express.raw({type: 'application/json'}), function(request, 
   } catch (err) {
     // invalid signature
     console.log("catching");
+    console.log(err);
     response.status(400).end();
     return;
   }
