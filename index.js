@@ -71,6 +71,7 @@ app.get('/test', (req, res) => {
 app.post('/webhook', express.raw({type: 'application/json'}), function(request, response) {
   const sig = request.headers['stripe-signature'];
   const body = request.body;
+  console.log("body9999999", body);
   console.log("signature from the homies:", sig);
   console.log("secret key from the homies", endpointSecret);
      let event = request.body;
