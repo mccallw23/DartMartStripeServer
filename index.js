@@ -74,6 +74,7 @@ app.post('/webhook', express.raw({type: 'application/json'}), function(request, 
   console.log("signature from the homies:", sig);
   console.log("secret key from the homies", endpointSecret);
      let event = request.body;
+     console.log(event);
   // try {
   //   console.log("trying");
   //   event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
