@@ -13,9 +13,8 @@ const app = express();
 app.use(cors({
     origin: '*'
 }));
-app.use("/webhook", bodyParser.raw({ type: "*/*" }));
 
-app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+//app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 app.use((req, res, next) => {
   if (req.originalUrl === "/webhook") {
     next(); // Do nothing with the body because I need it in a raw state.
@@ -23,8 +22,11 @@ app.use((req, res, next) => {
     express.json()(req, res, next); // ONLY do express.json() if the received request is NOT a WebHook from Stripe.
   }
 });
-app.use(express.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
-app.use(bodyParser.raw({type: '*/*'}));
+
+// app.use("/webhook", bodyParser.raw({ type: "*/*" }));
+// app.use(express.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+// app.use(bodyParser.raw({type: '*/*'}));
+
 const port = process.env.PORT || 3000;
 //const PUBLISHABLE_KEY = process.env.PUBLISHABLE_KEY;
 const PUBLISHABLE_KEY_LIVE = process.env.PUBLISHABLE_KEY_LIVE;
