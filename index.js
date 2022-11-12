@@ -70,10 +70,11 @@ app.get('/test', (req, res) => {
 
 app.post('/webhook', express.raw({type: 'application/json'}), function(request, response) {
   const sig = request.headers['stripe-signature'];
-  const body = request.body;
+  const body = request.body.id;
+  console.log("bodyIDDDDDD", request.body.id);
   console.log("signature from the homies:", sig);
   console.log("secret key from the homies", endpointSecret);
-     let event = request.body;
+  let event = request.body;
   // try {
   //   console.log("trying");
   //   event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
@@ -168,8 +169,9 @@ app.post('/payment-sheet', async (req, res) => {
       enabled: true,
     },
   });
-  console.log('ephemeral key', ephemeralKey);
+  console.log('ephemeral intent', paymentIntent);
   res.json({
+    paymentIntentId: paymentIntent.id,
     paymentIntent: paymentIntent.client_secret,
     ephemeralKey: ephemeralKey.secret,
     customer: customer.id,
