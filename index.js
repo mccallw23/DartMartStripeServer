@@ -14,7 +14,9 @@ app.use(cors({
     origin: '*'
 }));
 
-//app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.raw({ type: "*/*" }));
 app.use((req, res, next) => {
   if (req.originalUrl === "/webhook") {
     next(); // Do nothing with the body because I need it in a raw state.
@@ -74,6 +76,8 @@ app.post('/webhook', express.raw({type: 'application/json'}), function(request, 
   const sig = request.headers['stripe-signature'];
   const body = request.body.id;
   console.log("bodyIDDDDDD", request.body.id);
+  console.log("body", request.body);
+  console.log("request", request);
   console.log("signature from the homies:", sig);
   console.log("secret key from the homies", endpointSecret);
   let event = request.body;
