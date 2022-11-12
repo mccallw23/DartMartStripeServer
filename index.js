@@ -171,6 +171,7 @@ app.post('/payment-sheet', async (req, res) => {
   console.log('ephemeral intent', paymentIntent);
   res.json({
     paymentIntentId: paymentIntent.id,
+    paymentIntent: paymentIntent.client_secret,
     ephemeralKey: ephemeralKey.secret,
     customer: customer.id,
     publishableKey:
